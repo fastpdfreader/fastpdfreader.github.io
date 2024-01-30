@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelimeleri Göster</title>
+    <style>
+body {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+    background-color: black;
+    color: white; /* Set text color to white */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+
+        #wordList li {
+            display: none;
+        }
+
+        #wordList li.active {
+            display: inline;
+            color: rgb(255, 255, 255);
+            font-size: 36px;
+        }
+
+        h1 {
+            color: #ff4500;
+            display: none;
+        }
+
+        input[type="file"], button, label {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label, button {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tüm Kelimeler</h1>
+
+    <label for="fileInput">Dosya Seç</label>
+    <input type="file" id="fileInput" accept=".txt">
+    <button onclick="handleFile()">Dosyayı Yükle</button>
+
+    <ul id="wordList">
+        <!-- Buraya JavaScript ile doldurulacak -->
+    </ul>
+
+    <script>
+        var currentWordIndex = 0;
+        var intervalId;
+
+        function handleFile() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var content = e.target.result;
+                    var words = content.split(/\s+/);
+
+                    var wordList = document.getElementById("wordList");
+                    wordList.innerHTML = ''; // Liste içeriğini temizle
+
+                    words.forEach(function(word) {
+                        var li = document.createElement("li");
+                        li.textContent = word;
+                        wordList.appendChild(li);
+                    });
+
+                    currentWordIndex = 0;
+
+                    // Başlık ve butonları gizle, sadece hızlıca geçen kelimeleri göster
+                    document.querySelector('h1').style.display = 'none';
+                    document.querySelector('label').style.display = 'none';
+                    document.querySelector('input[type="file"]').style.display = 'none';
+                    document.querySelector('button').style.display = 'none';
+
+                    startWordInterval();
+                };
+
+                reader.readAsText(file);
+            }
+        }
+
+        function startWordInterval() {
+    var words = document.querySelectorAll('#wordList li');
+    var speed = 150; // Starting speed
+
+    intervalId = setInterval(function () {
+        if (currentWordIndex < words.length) {
+            words[currentWordIndex].classList.add('active');
+            if (currentWordIndex > 0) {
+                words[currentWordIndex - 1].classList.remove('active');
+            }
+            currentWordIndex++;
+
+            // Increase speed by 5 for each word
+            speed += 5;
+            // Limit speed to a maximum of 300 words per minute
+            speed = Math.min(speed, 300);
+
+            // Update interval based on the new speed
+            clearInterval(intervalId);
+            intervalId = setInterval(arguments.callee, 60000 / speed);
+        } else {
+            clearInterval(intervalId);
+        }
+    }, 60000 / speed); // Initial interval based on the starting speed
+}
+
+
+    </script>
+
+</body>
+</html>
