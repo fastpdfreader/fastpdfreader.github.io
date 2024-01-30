@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelimeleri Göster</title>
     <style>
-body {
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    font-size: 24px;
-    background-color: black;
-    color: white; /* Set text color to white */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
+        body {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+            background-color: black;
+            color: white;
+            /* Set text color to white */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
         #wordList li {
             display: none;
@@ -35,7 +36,9 @@ body {
             display: none;
         }
 
-        input[type="file"], button, label {
+        input[type="file"],
+        button,
+        label {
             display: block;
             margin: 10px auto;
             padding: 10px;
@@ -49,12 +52,14 @@ body {
             display: none;
         }
 
-        label, button {
+        label,
+        button {
             background-color: white;
             color: black;
         }
     </style>
 </head>
+
 <body>
 
     <h1>Tüm Kelimeler</h1>
@@ -70,6 +75,7 @@ body {
     <script>
         var currentWordIndex = 0;
         var intervalId;
+        var wordsPerMinute;
 
         function handleFile() {
             var fileInput = document.getElementById('fileInput');
@@ -85,7 +91,7 @@ body {
                     var wordList = document.getElementById("wordList");
                     wordList.innerHTML = ''; // Liste içeriğini temizle
 
-                    words.forEach(function(word) {
+                    words.forEach(function (word) {
                         var li = document.createElement("li");
                         li.textContent = word;
                         wordList.appendChild(li);
@@ -99,6 +105,8 @@ body {
                     document.querySelector('input[type="file"]').style.display = 'none';
                     document.querySelector('button').style.display = 'none';
 
+                    // Ask the user for words per minute
+                    wordsPerMinute = prompt('Dakikada kaç kelime gösterilsin?');
                     startWordInterval();
                 };
 
@@ -107,33 +115,32 @@ body {
         }
 
         function startWordInterval() {
-    var words = document.querySelectorAll('#wordList li');
-    var speed = 150; // Starting speed
+            var words = document.querySelectorAll('#wordList li');
+            var speed = wordsPerMinute || 150; // Default starting speed is 150 WPM
 
-    intervalId = setInterval(function () {
-        if (currentWordIndex < words.length) {
-            words[currentWordIndex].classList.add('active');
-            if (currentWordIndex > 0) {
-                words[currentWordIndex - 1].classList.remove('active');
-            }
-            currentWordIndex++;
+            intervalId = setInterval(function () {
+                if (currentWordIndex < words.length) {
+                    words[currentWordIndex].classList.add('active');
+                    if (currentWordIndex > 0) {
+                        words[currentWordIndex - 1].classList.remove('active');
+                    }
+                    currentWordIndex++;
 
-            // Increase speed by 5 for each word
-            speed += 5;
-            // Limit speed to a maximum of 300 words per minute
-            speed = Math.min(speed, 300);
+                    // Increase speed by 5 for each word
+                    speed += 5;
+                    // Limit speed to a maximum of 300 words per minute
+                    speed = Math.min(speed, 300);
 
-            // Update interval based on the new speed
-            clearInterval(intervalId);
-            intervalId = setInterval(arguments.callee, 60000 / speed);
-        } else {
-            clearInterval(intervalId);
+                    // Update interval based on the new speed
+                    clearInterval(intervalId);
+                    intervalId = setInterval(arguments.callee, 60000 / speed);
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 60000 / speed); // Initial interval based on the starting speed
         }
-    }, 60000 / speed); // Initial interval based on the starting speed
-}
-
-
     </script>
 
 </body>
+
 </html>
