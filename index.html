@@ -126,11 +126,6 @@
                     }
                     currentWordIndex++;
 
-                    // Increase speed by 5 for each word
-                    speed += 5;
-                    // Limit speed to a maximum of 300 words per minute
-                    speed = Math.min(speed, 300);
-
                     // Update interval based on the new speed
                     clearInterval(intervalId);
                     intervalId = setInterval(arguments.callee, 60000 / speed);
